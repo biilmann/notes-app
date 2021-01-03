@@ -1,0 +1,10 @@
+[build]
+    command = "npm run build"
+    publish = "build"
+    functions = "functions"
+
+[[redirects]]
+    from = "/notes/*"
+    to = "/.netlify/functions/notes"
+    status = 200
+    force = true
