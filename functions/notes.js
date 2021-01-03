@@ -1,12 +1,31 @@
-const {Pool} = require('pg');
+import {Pool} from 'pg';
+import marked from 'marked';
+import sanitizeHtml from 'sanitize-html';
 
+const allowedTags = sanitizeHtml.defaults.allowedTags.concat([
+    'img',
+    'h1',
+    'h2',
+    'h3',
+  ]);
+  const allowedAttributes = Object.assign(
+    {},
+    sanitizeHtml.defaults.allowedAttributes,
+    {
+      img: ['alt', 'src'],
+    }
+  );
+  
 function response(data, status) {
-    console.log("Sending response: ", data, status || 200)
     return {
         statusCode: status || 200,
         body: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
     }
+}
+
+function formatNote(note) {
+    return {...note, body_html: note.body && sanitizeHtml(marked(note.body), { allowedTags, allowedAttributes })}
 }
 
 const pool = new Pool({connectionString: process.env.PG_URI, ssl: { rejectUnauthorized: false }});
@@ -28,31 +47,30 @@ exports.handler = async function(event, context) {
             case 'GET':
                 if (noteId) {
                     const {rows} = await pool.query('select * from notes where id = $1', [noteId,]);
-                    return response(JSON.stringify(rows[0]))
+                    return response(JSON.stringify(formatNote(rows[0])))
                 }
 
                 const {rows} = await pool.query('select * from notes order by id desc');
-                return response(rows)
+                return response(rows.map(formatNote))
             case 'POST':
                 if (noteId) {
                     return response({error: "Method not allowed"}, 405)
                 }
-                const result = await pool.query(
+                const createResult = await pool.query(
                     'insert into notes (title, body, created_at, updated_at) values ($1, $2, $3, $3) returning id',
                     [data.title, data.body, now]
                 ); 
-                const insertedId = result.rows[0].id;
-                return response(data)
+                return response(formatNote(createResult))
             case 'PUT':
                 if (!noteId) {
                     return response({error: "Method not allowed"}, 405)
                 }
                 const updatedId = Number(noteId);
-                await pool.query(
+                const updateResult = await pool.query(
                     'update notes set title = $1, body = $2, updated_at = $3 where id = $4',
                     [data.title, data.body, now, updatedId]
                 );
-                return response(data)
+                return response(formatNote(updateResult))
             case 'DELETE':
                 await pool.query('delete from notes where id = $1', [noteId]);
                 return response({}, 200)

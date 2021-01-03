@@ -22,7 +22,7 @@ export default function Note({noteId, notes}) {
 
   const note = notes.find((n) => n.id === noteId);
 
-  let {id, title, body, updated_at} = note;
+  let {id, title, body, body_html, updated_at} = note;
   const updatedAt = new Date(updated_at);
 
   return (
@@ -36,7 +36,7 @@ export default function Note({noteId, notes}) {
           <EditButton noteId={id}>Edit</EditButton>
         </div>
       </div>
-      <NotePreview body={body} />
+      <NotePreview body={body} body_html={body_html}/>
     </div>
   );
 }

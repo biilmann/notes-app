@@ -8,7 +8,6 @@
 import {useState} from 'react';
 import {format, isToday} from 'date-fns';
 import excerpts from 'excerpts';
-import marked from 'marked';
 
 export default function SidebarNote({note, noteId, setNoteId}) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -19,7 +18,7 @@ export default function SidebarNote({note, noteId, setNoteId}) {
   const lastUpdatedAt = isToday(updatedAt)
     ? format(updatedAt, 'h:mm bb')
     : format(updatedAt, 'M/d/yy');
-  const summary = excerpts(marked(note.body), {words: 20});
+  const summary = excerpts(note.body_html, {words: 20});
   return (<div
         className={[
           'sidebar-note-list-item',
