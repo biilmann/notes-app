@@ -1,7 +1,7 @@
 [build]
     command = "npm run build"
     publish = "build"
-    functions = "functions"
+    functions = "lambda"
 
 [[redirects]]
     from = "/notes/*"
