@@ -9,7 +9,7 @@ import NoteListSkeleton from './NoteListSkeleton';
 import SidebarNote from './SidebarNote';
 
 export default function NoteList({noteId, notes, setNoteId, searchText, loadingState}) {
-  if (loadingState.state === "loading") {
+  if (loadingState === "loading") {
       return <NoteListSkeleton/>
   }
 

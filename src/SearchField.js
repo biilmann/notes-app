@@ -1,8 +1,6 @@
 import {useState} from 'react';
 
-import Spinner from './Spinner';
-
-export default function SearchField() {
+export default function SearchField({setSearch}) {
   const [text, setText] = useState('');
   return (
     <form className="search" role="search" onSubmit={(e) => e.preventDefault()}>
@@ -16,9 +14,9 @@ export default function SearchField() {
         onChange={(e) => {
           const newText = e.target.value;
           setText(newText);
+          setSearch(newText);
         }}
       />
-      <Spinner active={text} />
     </form>
   );
 }
