@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import React from 'react'
+import React, {Suspense} from 'react'
 
 const TextWithMarkdown = React.lazy(() => import('./TextWithMarkdown'));
 
@@ -14,7 +14,7 @@ export default function NotePreview({body, body_html}) {
     <div className="note-preview">
       {body_html ? <div
       className="text-with-markdown"
-      dangerouslySetInnerHTML={{__html: body_html}}></div> : <TextWithMarkdown text={body} />} 
+      dangerouslySetInnerHTML={{__html: body_html}}></div> : <Suspense fallback="..."><TextWithMarkdown text={body} /></Suspense>} 
     </div>
   );
 }

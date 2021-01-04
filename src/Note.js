@@ -6,11 +6,12 @@
  *
  */
 import {format} from 'date-fns';
+import NoteEditor from './NoteEditor';
 import NotePreview from './NotePreview';
 import EditButton from './EditButton';
 
-export default function Note({noteId, notes}) {
-  if (noteId === null) {
+export default function Note({noteId, notes, setEditing, isEditing, isSaving, saveNote, deleteNote}) {
+  if (noteId === null && !isEditing) {
     return (
       <div className="note--empty-state">
         <span className="note-text--empty-state">
@@ -22,9 +23,20 @@ export default function Note({noteId, notes}) {
 
   const note = notes.find((n) => n.id === noteId);
 
-  let {id, title, body, body_html, updated_at} = note;
-  const updatedAt = new Date(updated_at);
+  let {id, title, body, body_html, updated_at} = note || {};
+  const updatedAt = updated_at ? new Date(updated_at) : new Date();
 
+  if (isEditing) {
+    return <NoteEditor
+      noteId={id}
+      initialTitle={title}
+      initialBody={body || ''}
+      isSaving={isSaving}
+      saveNote={saveNote}
+      deleteNote={deleteNote}
+    />;
+  }
+  
   return (
     <div className="note">
       <div className="note-header">
@@ -33,10 +45,10 @@ export default function Note({noteId, notes}) {
           <small className="note-updated-at" role="status">
             Last updated on {format(updatedAt, "d MMM yyyy 'at' h:mm bb")}
           </small>
-          <EditButton noteId={id}>Edit</EditButton>
+          <EditButton noteId={id} setEditing={setEditing}>Edit</EditButton>
         </div>
       </div>
-      <NotePreview body={body} body_html={body_html}/>
+      <NotePreview body={body || ''} body_html={body_html}/>
     </div>
   );
 }

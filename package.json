@@ -15,13 +15,15 @@
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
     "sanitize-html": "^2.3.0",
+    "source-map-explorer": "^2.5.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && netlify-lambda build functions --config webpack.functions.config.js",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
     "extends": [

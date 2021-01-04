@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-export default function EditButton({noteId, children}) {
+export default function EditButton({noteId, setEditing, children}) {
   const isDraft = noteId == null;
   return (
     <button
@@ -13,7 +13,7 @@ export default function EditButton({noteId, children}) {
         'edit-button',
         isDraft ? 'edit-button--solid' : 'edit-button--outline',
       ].join(' ')}
-      onClick={() => {}}
+      onClick={() => { setEditing(true) }}
       role="menuitem">
       {children}
     </button>
