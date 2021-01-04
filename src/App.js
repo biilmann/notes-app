@@ -1,4 +1,4 @@
-import {useState, useEffect, useReducer} from 'react';
+import {useEffect, useReducer} from 'react';
 import SearchField from './SearchField';
 import NoteList from './NoteList';
 import Note from './Note';
